@@ -7,7 +7,6 @@ import re
 import requests
 import random
 import argparse
-
 from multiprocessing.dummy import Pool
 
 
@@ -110,7 +109,7 @@ def fuzzdir(url):
             urls = zj(urls)
             return urls
 
-# 读取rar.txt
+# 读取rar.txt 并生成 dirs
 def flie_txt():
     dir_s = []
     i = 0
@@ -126,40 +125,46 @@ def flie_txt():
 
 #　返回urls列表
 def ret_list(url):
-    urls = []
     if url[-1:] == "/":
         url = url[:-1]
     else:
         url = url
     url_list = fuzzdir(url)
-    i = 0
     dir_s = flie_txt()
     for url_dir in url_list:
         for hz in houzhui:
             url_dir_hz = '/' + url_dir + hz
-            i += 1
             dir_s.append(url_dir_hz)
+    urls = []
+    i = 0
+    sub = Name_url(url)
     for dir_hz in dir_s:
+        i +=1
+        url_dic = {}
         url_dir = url + dir_hz
-        urls.append(url_dir)
+        url_dic.update({'i':str(i),'url':url_dir,'sub':sub})
+        urls.append(url_dic)
     return urls
 
 # 请求
 def requ(url):
     url_200_list = []
     try:
-        file_name_txt = Name_url(url)
-        code = requests.head(url=url,headers=header[random.randint(0, len(header)-1)]).status_code
+        i = url['i']
+        url_u = url['url']
+        sub = url['sub']
+        code = requests.head(url=url_u,headers=header[random.randint(0, len(header)-1)]).status_code
         if code == 200:
-            with open(file_name_txt+".txt", mode='r', encoding='UTF-8-sig') as fp:
-                url_200_list.append(url)
-                fp.write(url+'\n')
-                print(url, ' ==> ', code)
-                print('==================可能存在备份文件==================')
-                for url_200_list in url_200_list:
-                    print(url_200_list)
+            if url_200_list.count(sub) <=5 :
+                with open("url_rar_200.txt", mode='r', encoding='UTF-8-sig') as fp:
+                    url_200_list.append(url_u)
+                    fp.write(url_u+'\n')
+                    print(i, ' ==> ',url_u, ' ==> ', code)
+                    print('==================可能存在备份文件==================')
+                    for url_200_list in url_200_list:
+                        print(url_200_list)
         else:
-            print(url, ' ==> ', code)
+            print(i, ' ==> ',url_u, ' ==> ', code)
             if len(url_200_list) != 0:
                 print('==================可能存在备份文件==================')
                 for url_200_list in url_200_list:
@@ -169,11 +174,14 @@ def requ(url):
 
 # 运行
 def run(url):
-    urls = ret_list(url)
-    pool = Pool(20)
-    pool.map(requ,urls)
-    pool.close()
-    pool.join()
+    try:
+        urls = ret_list(url)
+        pool = Pool(20)
+        pool.map(requ,urls)
+        pool.close()
+        pool.join()
+    except Exception as a:
+        print(a)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
