@@ -17,9 +17,9 @@ https://baidu.com            生成相关域名：1440 个
  
 https://www.baidu.com        生成相关域名：1440 个
 
-https://pan.baidu.com        生成相关域名：1440 个
+https://pan.baidu.com        生成相关域名：1880 个
 
-https://www.pan.baidu.com    生成相关域名：1440 个
+https://www.pan.baidu.com    生成相关域名：1880 个
 
 
 效果展示
