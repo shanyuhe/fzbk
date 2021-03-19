@@ -3,6 +3,7 @@
 # @Author : 山与河　qq 2900180755
 # @FIle ： fuzzbk.py
 # @Software : PyCharm
+
 import re
 import requests
 import random
@@ -18,8 +19,21 @@ header = [
         {'User-Agent':"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/19.77.34.5 Safari/537.1"},
          {'User-Agent':"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.9 Safari/536.5"}]
 
+
 houzhui = ['.gz', '.sql.gz', '.tar.gz','.tar.tgz','.rar','.zip','.tar','.tar.bz2','.sql','.7z','.bak','.txt','.git','.svn','.swp','.mdb','.old','.log']
 
+# logo
+
+def pr():
+    pr = """
+     _____        ______       _____        _   _   
+    |  ___|      |___  /      |  _  \      | | / /  
+    | |__           / /       | |_| |      | |/ /   
+    |  __|         / /        |  _  {      | |\ \   
+    | |           / /__       | |_| |      | | \ \  
+    |_|          /_____|      |_____/      |_|  \_\ 
+            """
+    print(pr)
 # 返回文件名
 def Name_url(url):
     ex = '[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?'
@@ -156,7 +170,7 @@ def requ(url):
         code = requests.head(url=url_u,headers=header[random.randint(0, len(header)-1)]).status_code
         if code == 200:
             if url_200_list.count(sub) <=5 :
-                with open("url_rar_200.txt", mode='r', encoding='UTF-8-sig') as fp:
+                with open("url_200.txt", mode='a+', encoding='UTF-8-sig') as fp:
                     url_200_list.append(url_u)
                     fp.write(url_u+'\n')
                     print(i, ' ==> ',url_u, ' ==> ', code)
@@ -173,7 +187,9 @@ def requ(url):
         print(a)
 
 # 运行
+
 def run(url):
+    pr()
     try:
         urls = ret_list(url)
         pool = Pool(20)
@@ -182,6 +198,7 @@ def run(url):
         pool.join()
     except Exception as a:
         print(a)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
